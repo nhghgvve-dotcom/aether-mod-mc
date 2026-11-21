@@ -1,0 +1,46 @@
+name: Release Aether Mod
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.5.1"
+
+      - name: Build mod
+        run: gradle build
+
+      - name: Package complete mod folder
+        run: |
+          git archive --format=zip --prefix=aether-mod-mc/ HEAD -o aether-mod-mc-source.zip
+
+      - name: Create GitHub release and attach files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          JAR="$(find build/libs -maxdepth 1 -type f -name 'aether-*.jar' ! -name '*-sources.jar' | head -n 1)"
+          test -n "$JAR"
+          gh release create "$VERSION" aether-mod-mc-source.zip "$JAR" \
+            --title "The Aether Mod $VERSION" \
+            --generate-notes
