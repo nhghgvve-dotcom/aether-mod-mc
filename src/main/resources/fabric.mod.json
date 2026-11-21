@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "aether",
+  "version": "${version}",
+  "name": "The Aether",
+  "description": "A new sky dimension for Minecraft Java Edition.",
+  "authors": ["Aether Mod Team"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.aether.AetherMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
