@@ -2,8 +2,8 @@ name: Release Aether Mod
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -32,11 +32,11 @@ jobs:
       - name: Package complete mod folder
         run: git archive --format=zip --prefix=aether-mod-mc/ HEAD -o aether-mod-mc-source.zip
 
-      - name: Create release if needed
+      - name: Create GitHub release and attach files
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${GITHUB_REF_NAME}"
+          VERSION="v0.1.0"
           JAR="$(find build/libs -maxdepth 1 -type f -name 'aether-*.jar' ! -name '*-sources.jar' | head -n 1)"
           test -n "$JAR"
           if gh release view "$VERSION" >/dev/null 2>&1; then
